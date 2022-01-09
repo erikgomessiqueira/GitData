@@ -1,53 +1,46 @@
 const INITIAL_STATE = {
-        name:'Erik Gomes Siqueira',
-        login:'erikgomessiqueira',
-        bio:'Tenho 18 anos e  pretendo seguir carreira na área da tecnologia tendo conhecimento de HTML, CSS, JavaScript e estudando React Native.',
-        avatar_url:'https://avatars.githubusercontent.com/u/67563562?v=4',
-        repos:[
-            {
-                id: '00',
-                name: 'Projeto-site',
-                language: 'HTML',
-                license: 'MIT License'
-            },
-            {
-                id: '01',
-                name: 'insiderLink',
-                language: 'JavaScript',
-                license: null
-            },
-            {
-                id: '02',
-                name: 'gameplay_nlw_together_react-native',
-                language: 'TypeScript',
-                license: null
-            },
-            {
-                id: '03',
-                name: 'NLW-Heat_Node',
-                language: 'TypeScript',
-                license: null
-            },
-            {
-                id: '04',
-                name: 'NLW-Heat_React-JS',
-                language: 'TypeScript',
-                license: null
-            }
-        ]
+        name:'',
+        requestSucess: {
+            state: false,
+            error:'',
+            alert: 'storage',
+        },
+        login:'',
+        bio:'',
+        avatar_url:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+        repos:[]
 }
 
 export const user = (state = INITIAL_STATE, action) =>{
+        console.log(action.type)
         if (action.type ==='REQUEST_SUCESS'){
             const data = action.payload.data
-            console.log(data)
+            //console.log(data)
             return data
         }
         else if (action.type ==='LOADING'){
-            
+            //console.log(action.payload.handleStateModalLoading)
             return {
                 ...state,
-                toggleStateModal: action.payload.handleStateModal
+                toggleStateModal: action.payload.handleStateModalLoading
+            }
+        }
+        if (action.type ==='SHOW_ERROR_REQUEST'){
+            console.log(action.payload.alert)
+            return {
+                ...state,
+                requestSucess:{
+                    state: state.requestSucess.state,
+                    error: state.requestSucess.error,
+                    alert: action.payload.alert,
+                },
+            }
+        }
+        if (action.type ==='REQUEST_FAILED'){
+            console.log(action.payload.requestSucess)
+            return {
+                ...state,
+                requestSucess: action.payload.requestSucess
             }
         }
         else{

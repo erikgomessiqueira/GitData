@@ -1,28 +1,60 @@
-import React, { useState } from 'react';
-import { TextInput, Modal, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TextInput, Modal, View, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { requestLoad, ToggleStateModal } from '../../store/action.js';
+import { requestLoad, ShowErrorRequest, ToggleStateModal } from '../../store/action.js';
 import Button from '../Button/index.js';
 import { styles } from './styles.js';
 
 
 
-const ModalSeach = ({toggleStateModal, handleStateModal, requestRepos}) => {
+const ModalSeach = (
+    {   toggleStateModal, 
+        name, 
+        handleStateModal, 
+        requestSucess, 
+        requestRepos,
+        handleAlert
+    }
+) => {
     const [login, setLogin] = useState('')
+
+
+    const AlertErrorRequest = (title,message)=>{
+        Alert.alert(
+            title,
+            message,
+            [
+                { text: "OK", }
+            ]
+        )
+    }
 
     function handleModal(){
         Keyboard.dismiss
-        handleStateModal(toggleStateModal)
-    }
 
-    function search(){
+        handleStateModal(toggleStateModal)
+
         
     }
 
+    const search = async ()=>{
+        await requestRepos(login.length === 0 ? 'erikgomessiqueira': login)
+        Keyboard.dismiss
+        
+    }
+    useEffect(()=>{
+        if(requestSucess.alert === 'request' && requestSucess.state === false){
+            let title = 'Ocorreu um Erro!'
+            let message = requestSucess.error >=400 && requestSucess.error <=500 ? 'Usuário não foi encontrado': null
+            handleAlert('storage')
+            AlertErrorRequest(title, message)
+        }
+        
+    },[requestSucess.alert])
     return(
         <Modal
             transparent = {true}
-            visible={toggleStateModal}
+            visible={name === ''? true:toggleStateModal}
             style={styles.conteiner}
         >   
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} touchSoundDisabled={true}>
@@ -33,7 +65,7 @@ const ModalSeach = ({toggleStateModal, handleStateModal, requestRepos}) => {
                         onChangeText={(text)=> setLogin(text)}
                         value={login}
                     />
-                    <Button onPress={()=>requestRepos(login)}/>
+                    <Button onPress={search}/>
                 </View>
             </TouchableWithoutFeedback>
 
@@ -47,6 +79,8 @@ const ModalSeach = ({toggleStateModal, handleStateModal, requestRepos}) => {
 const mapStateToProps = (state) => {
     return { 
         toggleStateModal: state.aplication.toggleStateModal,
+        requestSucess: state.user.requestSucess,
+        name: state.user.name,
     }
 }
 
@@ -54,6 +88,7 @@ const mapDispatchToProps = (dispatch) => {
     return { 
         handleStateModal: (toggleStateModal) => dispatch(ToggleStateModal(toggleStateModal)),
         requestRepos:(login) => dispatch(requestLoad(login)),
+        handleAlert: (prop)=>dispatch(ShowErrorRequest(prop))
     }
 }
 

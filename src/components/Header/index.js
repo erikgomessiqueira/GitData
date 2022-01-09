@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return { 
-        handleStateModal: (toggleStateModal) => dispatch(ToggleStateModal(toggleStateModal))
+        handleStateModal: (toggleModal) => dispatch(ToggleStateModal(toggleModal))
     }
 }
 

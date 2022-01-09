@@ -11,13 +11,21 @@ export function HandleLoading(loading){
     return {
         type: 'LOADING',
         payload:{
-            handleStateModal:!loading
+            handleStateModalLoading:loading
+        }
+    }
+}
+
+export function ShowErrorRequest(alertErrorState){
+    return {
+        type: 'SHOW_ERROR_REQUEST',
+        payload:{
+            alert: alertErrorState
         }
     }
 }
 
 export function requestLoad(login){
-    console.log('aq')
     return {
         type: 'REQUEST_LOAD',
         payload:{login}
@@ -31,8 +39,11 @@ export function requestSucess(data){
     }
 }
 
-export function resquestFailed(){
+export function resquestFailed(data){
     return {
         type: 'REQUEST_FAILED',
+        payload: {
+            requestSucess: data
+        }
     }
 }

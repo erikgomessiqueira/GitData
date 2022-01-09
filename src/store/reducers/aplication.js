@@ -11,6 +11,7 @@ export const aplication = (state = INITIAL_STATE, action) =>{
             }
         }
         else if (action.type ==='LOADING'){
+            //console.log(action.payload.handleStateModal)
             return {
                 ...state,
                 toggleStateModal: action.payload.handleStateModal
